@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: dtcc-mock-
+server:
+  port: 8081
