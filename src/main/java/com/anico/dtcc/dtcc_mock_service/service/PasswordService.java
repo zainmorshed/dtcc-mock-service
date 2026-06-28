@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.anico.dtcc.dtcc_mock_service.dto.UserRequest;
+
 @Service
 public class PasswordService {
 
@@ -20,11 +22,11 @@ public class PasswordService {
     public PasswordService() {
     }
     
-    public boolean checkValidUser(String user) {
+    public boolean checkValidUser(UserRequest userRequest) {
 
         for(String i : validUsers.keySet()) {
             //check valid user
-            if(i.equals(user)) {
+            if(i.equals(userRequest.getUser())) {
                 return true;
             } 
             //can also use return validUsers.containsKey(user); -> instantly returns true or false
@@ -33,12 +35,12 @@ public class PasswordService {
         
     }
 
-    public String checkValidPassword(String user) {
+    public String checkValidPassword(UserRequest userRequest) {
 
-        boolean valUser = checkValidUser(user);
+        boolean valUser = checkValidUser(userRequest);
 
         if (valUser) {
-            LocalDate expirationDate = validUsers.get(user);
+            LocalDate expirationDate = validUsers.get(userRequest.getUser());
 
             if(expirationDate.isBefore(currentDate)) {
                 return "Password Expired!";

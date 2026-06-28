@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.anico.dtcc.dtcc_mock_service.dto.UserRequest;
 import com.anico.dtcc.dtcc_mock_service.service.PasswordService;
 
 @RestController
@@ -17,8 +18,8 @@ public class DtccController {
     }
 
     @PostMapping("/password-expiration")    
-    public String checkPassExp(@RequestBody String user) {
-        return passwordService.checkValidPassword(user);
+    public String checkPassExp(@RequestBody UserRequest userRequest) {
+        return passwordService.checkValidPassword(userRequest);
     }
 
     @PostMapping("/reset-password")
