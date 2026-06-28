@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.anico.dtcc.dtcc_mock_service.dto.UserRequest;
+import com.anico.dtcc.dtcc_mock_service.dto.UserResponse;
 import com.anico.dtcc.dtcc_mock_service.model.DtccUser;
 
 @Service
@@ -53,29 +54,41 @@ public class PasswordService {
         
     // }
 
-    public String checkValidPassword(UserRequest userRequest) {
+    UserResponse userResponse = new UserResponse();
+
+    public UserResponse checkValidPassword(UserRequest userRequest) {
 
         // boolean valUser = checkValidUser(userRequest);
         // private final DtccUser dtccUser = new DtccUser(userRequest.getUserName(), userRequest.getPassword(), currentDate);
 
         DtccUser user = users.get(userRequest.getUserName());
         if (user == null) {
-            return "Invalid user!";
+            userResponse.setPasswordStatus("Invalid User!");
+            return userResponse;
         }
 
         LocalDate expirationDate = user.getExpirationDate(); //check expiration date after we've confirmed the user exists
 
+        userResponse.setUserName(userRequest.getUserName());
+        userResponse.setExpirationDate(expirationDate);
+
+        
         if(expirationDate.isBefore(currentDate)) {
-            return "Password Expired!";
+            userResponse.setPasswordStatus("Password Expired!");
+            return userResponse;
+
         } else if (expirationDate.isEqual(currentDate)) {
-            return "Password will expire today! Please reset";
+            userResponse.setPasswordStatus("Password will expire today! Please reset");
+            return userResponse;
         } else if (expirationDate.isBefore(currentDate.plusDays(5))){ //rotate the password within 5 days of the expiration date
 
             long daysRemaining = ChronoUnit.DAYS.between(currentDate, expirationDate);
-            return "Password will expire in " + daysRemaining + " days!";
+            userResponse.setPasswordStatus("Password will expire in " + daysRemaining + " days! ");
+            return userResponse;
         } 
-        
-    return "Password is still valid!";
+    
+    userResponse.setPasswordStatus("Password is still valid until "+ expirationDate);
+    return userResponse;
 
     }
 }
