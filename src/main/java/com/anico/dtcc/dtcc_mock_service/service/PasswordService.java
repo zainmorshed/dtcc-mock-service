@@ -1,6 +1,7 @@
 package com.anico.dtcc.dtcc_mock_service.service;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Map;
 
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ public class PasswordService {
     private final LocalDate currentDate = LocalDate.now();
 
     private final Map<String, LocalDate> validUsers = Map.of(
-        "ANICO", LocalDate.of(2026, 6, 28),
+        "ANICO", LocalDate.of(2026, 6, 30),
         "MS", LocalDate.of(2026, 7, 14),
         "DTCC", LocalDate.of(2026, 7, 28)
     );
@@ -44,8 +45,12 @@ public class PasswordService {
 
             if(expirationDate.isBefore(currentDate)) {
                 return "Password Expired!";
-            } else if (expirationDate.isEqual(currentDate) || expirationDate.isAfter(currentDate.minusDays(5))) {
-                return "Password will soon expire";
+            } else if (expirationDate.isEqual(currentDate)) {
+                return "Password will expire today! Please reset";
+            } else if (expirationDate.isAfter(currentDate.minusDays(5))){
+
+                long daysRemaining = ChronoUnit.DAYS.between(currentDate, expirationDate);
+                return "Password will expire in " + daysRemaining + " days!";
             }
         }
         return "Password is still valid!";
