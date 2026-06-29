@@ -29,7 +29,7 @@ public class PasswordService {
         users.put("anico-service-account", new DtccUser(
                                             "ANICO",
                                             "password123",
-                                            LocalDate.now().plusDays(2)));
+                                            LocalDate.now().plusDays(1)));
         users.put("ms-service-account", new DtccUser(
                                     "MS",
                                     "password789",
