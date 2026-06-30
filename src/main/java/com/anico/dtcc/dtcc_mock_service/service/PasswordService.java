@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.anico.dtcc.dtcc_mock_service.dto.NewPassRequest;
 import com.anico.dtcc.dtcc_mock_service.dto.UserRequest;
 import com.anico.dtcc.dtcc_mock_service.dto.UserResponse;
 import com.anico.dtcc.dtcc_mock_service.model.DtccUser;
@@ -40,6 +41,36 @@ public class PasswordService {
                                     LocalDate.now().plusDays(20)));
                                                                         
     }
+
+    public String getPassword(String userName){
+
+        String accountKey = userName.toLowerCase() + "-service-account";
+        DtccUser account = users.get(accountKey);
+        String password = account.getPassword();
+
+        return password;
+
+    }
+
+    public String updatePassword(NewPassRequest newPassword) {
+        String userName = newPassword.getUserName();
+        String updatedPassword = newPassword.getNewPassword();
+
+        // DtccUser dttcUser = new DtccUser();
+        // dtccUser.setPassword(updatedPassword);
+        // users.put
+        String accountKey = userName.toLowerCase() + "-service-account";
+        DtccUser userAccount = users.get(accountKey);
+
+        if (userAccount != null) {
+            userAccount.setPassword(updatedPassword);
+            userAccount.setExpirationDate(LocalDate.now().plusDays(30));
+
+            return "Password successfully reset for " + userName + "!";
+        }
+        return "Error: Account not found!";
+            
+    }
     
     // public boolean checkValidUser(UserRequest userRequest) {
 
@@ -54,9 +85,10 @@ public class PasswordService {
         
     // }
 
-    UserResponse userResponse = new UserResponse();
 
     public UserResponse checkValidPassword(UserRequest userRequest) {
+        //object instationation inside method to ensure every API call gets its own clean, isolated response container - sol multiple users don't overwrite each other data
+        UserResponse userResponse = new UserResponse();
 
         // boolean valUser = checkValidUser(userRequest);
         // private final DtccUser dtccUser = new DtccUser(userRequest.getUserName(), userRequest.getPassword(), currentDate);

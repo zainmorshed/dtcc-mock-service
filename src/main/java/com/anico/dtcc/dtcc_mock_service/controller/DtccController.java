@@ -4,10 +4,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.anico.dtcc.dtcc_mock_service.dto.UserRequest;
 import com.anico.dtcc.dtcc_mock_service.dto.UserResponse;
 import com.anico.dtcc.dtcc_mock_service.service.PasswordService;
+
+import com.anico.dtcc.dtcc_mock_service.dto.NewPassRequest;
+
 
 @RestController
 public class DtccController {
@@ -23,17 +27,26 @@ public class DtccController {
         return passwordService.checkValidPassword(userRequest);
     }
 
+
     @PostMapping("/reset-password")
-    public String resetPass(@RequestBody String newPassword){
+    public String resetPass(@RequestBody NewPassRequest newPassword){
+        
+        return passwordService.updatePassword(newPassword);
 
-
-        //will update this later with logic to check for password conditions
-        if (newPassword.length() < 8) {
-            return "password must be greater then 8 characters";
-        } else {
-            return "password successfully reset!";
-        }
+        // //will update this later with logic to check for password conditions
+        // if (newPassword.length() < 8) {
+        //     return "password must be greater then 8 characters";
+        // } else {
+        //     return "password successfully reset!";
+        // }
     }
+
+    //get method for testing purpose - get current password - using hashmap, not db
+    @GetMapping("/get-password")
+    public String getPassword(@RequestParam("userName") String userName) {
+        return passwordService.getPassword(userName);
+    }
+
   
 }
 
