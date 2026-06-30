@@ -11,6 +11,7 @@ import com.anico.dtcc.dtcc_mock_service.dto.UserResponse;
 import com.anico.dtcc.dtcc_mock_service.service.PasswordService;
 
 import com.anico.dtcc.dtcc_mock_service.dto.NewPassRequest;
+import com.anico.dtcc.dtcc_mock_service.dto.UpdatePassRequest;
 
 
 @RestController
@@ -39,6 +40,14 @@ public class DtccController {
         // } else {
         //     return "password successfully reset!";
         // }
+    }
+
+    
+    // use this method to manually change password
+    @PostMapping("/change-password")
+    public String resetPass(@RequestBody UpdatePassRequest request){
+        
+        return passwordService.changePassword(request);
     }
 
     //get method for testing purpose - get current password - using hashmap, not db

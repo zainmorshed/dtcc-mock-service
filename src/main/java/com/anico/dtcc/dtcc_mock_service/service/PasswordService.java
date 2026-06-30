@@ -8,6 +8,7 @@ import java.util.Map;
 import org.springframework.stereotype.Service;
 
 import com.anico.dtcc.dtcc_mock_service.dto.NewPassRequest;
+import com.anico.dtcc.dtcc_mock_service.dto.UpdatePassRequest;
 import com.anico.dtcc.dtcc_mock_service.dto.UserRequest;
 import com.anico.dtcc.dtcc_mock_service.dto.UserResponse;
 import com.anico.dtcc.dtcc_mock_service.model.DtccUser;
@@ -25,7 +26,7 @@ public class PasswordService {
     //^ factory methods allow us to intialize the objects we create - that is their main job - they take your inputs and set up the objects initial state
 
     private final Map<String, DtccUser> users = new HashMap<>();
-
+    //initial map state
     public PasswordService() {
         users.put("anico-service-account", new DtccUser(
                                             "ANICO",
@@ -70,6 +71,25 @@ public class PasswordService {
         }
         return "Error: Account not found!";
             
+    }
+
+    //this method is used to support manual password reset
+    
+    public String changePassword(UpdatePassRequest request) {
+        String userName = request.getUserName();
+        String oldPassword = request.getOldPassword();
+        String newPassword = request.getNewPassword();
+
+        String accountKey = userName.toLowerCase() + "-service-account";
+        DtccUser userAccount = users.get(accountKey);
+
+        if(userAccount != null) {
+            userAccount.setPassword(newPassword);
+            userAccount.setExpirationDate(LocalDate.now().plusDays(30));
+
+            return "Password successfully reset for " + userName + "!";
+        }
+        return "Error: Account not found!";
     }
     
     // public boolean checkValidUser(UserRequest userRequest) {
